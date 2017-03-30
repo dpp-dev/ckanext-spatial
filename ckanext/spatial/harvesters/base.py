@@ -260,7 +260,32 @@ class SpatialHarvester(HarvesterBase):
             'spatial-data-service-type',
         ]:
             extras[name] = iso_values[name]
+        
+        # START LATVIAN dataset metadata maping
+        if iso_values['metadata-language'] == 'lav':
+            package_dict['language'] = 'lv'
+        if iso_values['metadata-language'] == 'eng':
+            package_dict['language'] = 'en'
+        if iso_values['metadata-language'] == 'rus':
+            package_dict['language'] = 'ru'
+        if iso_values['contact']:
+            package_dict['maintainer'] = iso_values['contact']
+        if iso_values['contact-email']:
+            package_dict['maintainer_email'] = iso_values['contact-email']
+        if iso_values['date-released']:
+            package_dict['issued'] = iso_values['date-released']
+        if iso_values['date-updated']:
+            package_dict['modified'] = iso_values['date-updated']
 
+        for val in iso_values['use-constraints']:
+            if val == 'no conditions apply':
+                package_dict['license_id'] = 'CC0-1.0'
+                break
+        if not('license_id' in package_dict) or package_dict['license_id'] != 'CC0-1.0':
+            log.debug('No requred dataset licence %s', val)
+            return False
+        # END LATVIAN dataset metadata maping
+        
         if len(iso_values.get('progress', [])):
             extras['progress'] = iso_values['progress'][0]
         else:
@@ -421,6 +446,7 @@ class SpatialHarvester(HarvesterBase):
 
         package_dict['extras'] = extras_as_dict
 
+        #if iso_values['use-constraints'] == 'no conditions apply':
         return package_dict
 
     def transform_to_iso(self, original_document, original_format, harvest_object):
@@ -657,7 +683,7 @@ class SpatialHarvester(HarvesterBase):
                     return False
 
         model.Session.commit()
-
+                
         return True
     ##
 
