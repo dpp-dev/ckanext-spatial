@@ -11,7 +11,7 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
 from ckanext.spatial.harvesters.base import SpatialHarvester,  guess_standard
 
-
+log = logging.getLogger(__name__)
 class DocHarvester(SpatialHarvester, SingletonPlugin):
     '''
     A Harvester for individual spatial metadata documents
