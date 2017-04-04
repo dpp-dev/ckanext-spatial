@@ -284,6 +284,11 @@ class SpatialHarvester(HarvesterBase):
         if not('license_id' in package_dict) or package_dict['license_id'] != 'CC0-1.0':
             log.debug('No requred dataset licence %s', val)
             return False
+        # Set default frequency if needed
+        default_frequency = self.source_config.get('default_frequency', None)
+        log.info('default frequency %s', default_frequency)
+        if default_frequency:
+            package_dict['frequency'] = default_frequency
         # END LATVIAN dataset metadata maping
         
         if len(iso_values.get('progress', [])):
